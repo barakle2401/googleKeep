@@ -48,4 +48,12 @@ module.exports = {
       },
     ],
   },
+  overrides: [
+    {
+      files: ['*.tsx', '*.ts'],
+      rules: {
+        'no-undef': 'off',
+      },
+    },
+  ],
 };

@@ -1,21 +1,37 @@
+import { observer } from 'mobx-react-lite';
 import React, { useEffect, useState } from 'react';
 
 import Note from '@/components/notes/Note';
+import { useNotesStore } from '@/context/NotesContext';
 import db from '@/firebase/db';
-import { NotesArray } from '@/types/notes';
+
 const Notes: React.FC = () => {
-  const [notes, setNotes] = useState<NotesArray>([]);
+  const notesStore = useNotesStore();
+  const [isNotesFetched, setIsNotesFetched] = useState<Boolean>(false);
+
+  const getNotes = async (): Promise<void> => {
+    const notes = await db.getNotes();
+    notesStore?.setNotes([...notes]);
+    setIsNotesFetched(true);
+  };
+
   useEffect(() => {
-    db.getNotes().then((notes) => {
-      setNotes(notes);
-    });
+    getNotes();
   }, []);
 
-  const notesList = notes.map((note) => {
-    return <Note text={note.text} id={note.id} title={note.title} key={note.id} />;
+  const NotesList = observer(() => {
+    return (
+      <div className="notes">
+        {notesStore?.notes.map((note) => {
+          return <Note text={note.text} id={note.id} title={note.title} key={note.id} />;
+        })}
+      </div>
+    );
   });
 
-  return <div className="notes">{notesList}</div>;
+  if (!isNotesFetched) return <h3>Loading...</h3>;
+  else if (notesStore?.notes.length === 0) return <h1>No Data</h1>;
+  return <NotesList />;
 };
 
 export default Notes;

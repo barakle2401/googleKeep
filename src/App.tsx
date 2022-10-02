@@ -1,18 +1,21 @@
-import './App.css';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-import Header from '@/components/header/Header';
-import CreateNote from '@/components/notes/CreateNote';
-import Notes from '@/components/notes/Notes';
-import GlobalStyle from '@/styles/Global';
+import UpdateModal from '@/components/notes/UpdateModal';
+import Home from '@/views/home/Home';
+const router = createBrowserRouter([
+  {
+    path: '/',
+    element: <Home />,
+    children: [
+      {
+        path: 'edit/:noteId',
+        element: <UpdateModal />,
+      },
+    ],
+  },
+]);
 function App() {
-  return (
-    <div className="App">
-      <GlobalStyle />
-      <Header />
-      <CreateNote />
-      <Notes />
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

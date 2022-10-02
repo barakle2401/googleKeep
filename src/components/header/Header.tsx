@@ -5,7 +5,7 @@ import keepLogo from '@/assets/images/keep-logo.png';
 import reactLogo from '@/assets/images/react-logo.png';
 
 const Wrapper = styled.div`
-  padding: 4em;
+  margin-top: 1rem;
   .logos {
     font-size: 1.5rem;
     display: flex;

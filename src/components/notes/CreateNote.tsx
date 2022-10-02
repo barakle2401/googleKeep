@@ -1,46 +1,60 @@
-import { Add } from '@mui/icons-material';
-import IconButton from '@mui/material/IconButton';
-import Input from '@mui/material/Input';
-import InputAdornment from '@mui/material/InputAdornment';
-import InputLabel from '@mui/material/InputLabel';
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import db from '@/firebase/db';
-function CreateNote() {
-  const [note, setNote] = useState('');
+import { useNotesStore } from '@/context/NotesContext';
+import { NoteType } from '@/types/notes';
+import { Container, TextField, Box, Card } from '@mui/material';
 
-  const addNote = async () => {
+function CreateNote() {
+  const [title, setTitle] = useState('');
+  const [text, setText] = useState('');
+  const notesStore = useNotesStore();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const note: NoteType = { title, text, id: null };
     db.addNote(note).then(
       () => {
-        setNote('');
+        notesStore.addNote(note);
+        setText('');
+        setTitle('');
       },
       (e: any) => console.error(e),
     );
   };
-
   return (
-    <div>
-      <InputLabel htmlFor="note">Add note </InputLabel>
-      <Input
-        id="note"
-        value={note}
-        onChange={(e) => {
-          setNote(e.target.value);
-        }}
-        minRows={10}
-        endAdornment={
-          <InputAdornment position="end">
-            <IconButton
-              color={'secondary'}
-              onClick={addNote}
-              aria-label="toggle password visibility"
-            >
-              <Add />
-            </IconButton>
-          </InputAdornment>
-        }
-      />
-    </div>
+    <Card sx={{ py: 3, px: 5 }}>
+      <form onSubmit={handleSubmit}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <TextField
+            type="text"
+            id="title"
+            placeholder="Title"
+            sx={{
+              m: 2,
+              width: '100%',
+            }}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <TextField
+            id="text"
+            placeholder="Note"
+            sx={{
+              m: 2,
+              width: '100%',
+            }}
+            onChange={(e) => setText(e.target.value)}
+          />
+          <button className="btn">Add Note</button>
+        </Box>
+      </form>
+    </Card>
   );
 }
 
