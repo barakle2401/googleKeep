@@ -4,15 +4,17 @@ import { NotesType, NoteType } from '@/types/notes';
 
 import { db } from './firebase';
 
-const addNote = async (note: NoteType) => {
+const addNote = async (note: NoteType): Promise<string> => {
   const notesRef = ref(db, 'notes');
   const newNoteRef = push(notesRef);
   const id = newNoteRef.key;
-  return set(newNoteRef, {
+  await set(newNoteRef, {
     title: note.title,
     text: note.text,
     id,
   });
+
+  return id;
 };
 
 const getNotes = async () => {
@@ -51,8 +53,18 @@ const getNoteById = async (id: String) => {
   });
 };
 
-const updateNote = async (note) => {
-  //TODO:
+const updateNote = async (note: NoteType) => {
+  const noteRef = ref(db, 'notes/' + note.id);
+  return await set(noteRef, {
+    title: note.title,
+    text: note.text,
+    id: note.id,
+  });
+};
+
+const deleteNote = async (noteId: string) => {
+  const noteRef = ref(db, 'notes/' + noteId);
+  return await set(noteRef, null);
 };
 
 export default {
@@ -60,4 +72,5 @@ export default {
   getNotes: getNotes,
   updateNote: updateNote,
   getNoteById: getNoteById,
+  deleteNote: deleteNote,
 };

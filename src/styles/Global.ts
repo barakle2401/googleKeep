@@ -1,12 +1,18 @@
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyles = createGlobalStyle`
+  :root {
+    --gray: #dcd7d7;
+    --light-gray: #F0F0F0;
+    --white: #fff;
+  }
+
   html, body {
     height: 100%;
   }
 
   body {
-    background-color: rgba(141, 141, 141, 0.15);
+    color: rgba(0, 0, 0, 0.702);
     text-align: center;
     margin: 0;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
@@ -43,23 +49,29 @@ const GlobalStyles = createGlobalStyle`
     .container {
       width: 1200px;
     }
-  } 
-  .h-100{
+  }
+
+  .h-100 {
     height: 100%;
   }
+
   //flex-box
-  .d-flex{
+  .d-flex {
     display: flex;
   }
-  .align-items-center{
+
+  .align-items-center {
     align-items: center;
   }
-  .justify-center{
+
+  .justify-center {
     justify-content: center;
   }
-  .flex-column{
+
+  .flex-column {
     flex-direction: column;
   }
+
   //margin, padding
   .mb-1 {
     margin-bottom: 0.25rem;
@@ -75,11 +87,16 @@ const GlobalStyles = createGlobalStyle`
     font-size: 1rem;
     border-width: 5px;
     border-style: solid;
-    border-color: #fff;
+    border-color: var(--white);
     border-radius: 6px;
     outline: transparent;
-    width: 100%;
     text-align: left;
+    width: 90%;
+    resize: none;
+  }
+
+  textarea::-webkit-scrollbar {
+    display: none;
   }
 
   //NOTES
@@ -94,6 +111,8 @@ const GlobalStyles = createGlobalStyle`
 
   .note {
     position: relative;
+    min-height: 100px;
+    text-overflow: ellipsis;
   }
 
   .note svg {
@@ -104,9 +123,14 @@ const GlobalStyles = createGlobalStyle`
     transition: all .2s ease-in-out;
   }
 
-  .note:hover {
-    box-shadow: 2px 6px 10px 4px rgb(211 200 200 / 47%);
+  .note svg:hover {
+    cursor: pointer;
+    border-radius: 50%;
+    background-color: rgba(217, 47, 255, 0.21);
+    box-shadow: 0 0 5px rgb(255, 206, 137);
+    padding: 8px;
   }
+
 
   .create-note {
     display: flex;
@@ -124,7 +148,7 @@ const GlobalStyles = createGlobalStyle`
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #ffffffbf;
+    background-color: var(--white);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -150,12 +174,30 @@ const GlobalStyles = createGlobalStyle`
 
   //buttons
   .btn {
-    padding: 5px 10px;
-    border-radius: 10px;
-    color: gray;
-    background-color: white;
-    border: 1px solid gray;
+    padding: 10px 17px;
+    border-radius: 2px;
+    font-weight: 500;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
     font-size: 1rem;
+    transition: background-color ease-in-out 0.5s;
   }
+
+  .btn:hover {
+    background-color: var(--gray);
+  }
+
+  #editIcon {
+    background-color: var(--light-gray);
+    margin-right: auto;
+    border-radius: 2px;
+    padding: 5px 10px;
+  }
+
+  .editable {
+    outline: none;
+  }
+
 `;
 export default GlobalStyles;

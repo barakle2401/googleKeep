@@ -4,7 +4,7 @@ import { NotesType, NoteType } from '@/types/notes';
 
 const addNote = (note: NoteType, notes: NotesType): NotesType => [note, ...notes];
 
-const removeNote = (id: string, notes: NotesType): NotesType =>
+const deleteNote = (id: string, notes: NotesType): NotesType =>
   notes.filter((note) => note.id !== id);
 
 const updateNote = (note: NoteType, notes: NotesType): NotesType => {
@@ -32,8 +32,8 @@ export class NotesStore {
     this.notes = addNote(note, this.notes);
   }
 
-  removeNote(id: string) {
-    this.notes = removeNote(id, this.notes);
+  deleteNote(id: string) {
+    this.notes = deleteNote(id, this.notes);
   }
 
   updateNote(note: NoteType) {

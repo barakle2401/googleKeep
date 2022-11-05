@@ -1,17 +1,18 @@
-import LoadingButton from '@mui/lab/LoadingButton';
-import { Backdrop, Box, Fade, Modal, TextField } from '@mui/material/';
+import { Backdrop, Box, Fade, Modal } from '@mui/material/';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-
+import DeleteIcon from '@mui/icons-material/Delete';
+import { useNotesStore } from '@/context/NotesContext';
 import db from '@/firebase/db';
 import { NoteType } from '@/types/notes';
 
 const UpdateModal = () => {
   const { noteId } = useParams();
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState<Boolean>(false);
-  const [loading, setLoading] = useState<Boolean>(false);
+  const store = useNotesStore();
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [editedNote, setEditedNote] = useState<NoteType>({
     text: '',
     title: '',
@@ -38,43 +39,58 @@ const UpdateModal = () => {
 
   const saveChanges = (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
-    db.updateNote(noteId).then(() => {
-      setTimeout(() => {
-        setLoading(false);
+    db.updateNote(editedNote)
+      .then(() => {
+        store.updateNote(editedNote);
+        closeModal();
         backHome();
-      }, 1000);
-    });
+      })
+      .catch((e) => console.log(e));
+  };
+
+  const deleteNote = () => {
+    db.deleteNote(noteId)
+      .then(() => {
+        store.deleteNote(noteId);
+        closeModal();
+        backHome();
+      })
+      .catch((e) => console.log(e));
   };
 
   const setFormValue = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEditedNote({ ...editedNote, [e.target.name]: e.target.value });
   };
-  const style = {
+  const wrapperStyle = {
     position: 'absolute' as 'absolute',
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 400,
+    width: 600,
+    height: 220,
     bgcolor: 'background.paper',
-    p: 7,
+    px: 1,
+    py: 2,
+    borderRadius: '10px',
+    display: 'flex',
+    flexDirection: 'column',
   };
 
   return (
     <Modal
       key="modal"
-      onClose={closeModal}
+      onClose={saveChanges}
       open={isModalOpen}
       aria-labelledby="transition-modal-title"
       aria-describedby="transition-modal-description"
       closeAfterTransition
       BackdropComponent={Backdrop}
       BackdropProps={{
-        timeout: 500,
+        timeout: 200,
       }}
     >
       <Fade in={isModalOpen}>
-        <Box sx={style}>
+        <Box sx={wrapperStyle}>
           <Box
             sx={{
               display: 'flex',
@@ -82,37 +98,35 @@ const UpdateModal = () => {
               alignItems: 'center',
             }}
           >
-            <TextField
-              label="Title"
+            <input
               type="text"
               id="title"
               name="title"
               onChange={setFormValue}
               placeholder="Title"
-              sx={{
-                m: 2,
-                width: '100%',
-              }}
               value={editedNote?.title}
             />
-            <TextField
-              label="Note"
+            <textarea
               className="mb-2"
               id="text"
               name="text"
               placeholder="Note"
-              multiline
-              rows={4}
-              sx={{
-                m: 2,
-                width: '100%',
-              }}
+              rows={2}
               value={editedNote?.text}
               onChange={setFormValue}
             />
-            <LoadingButton onClick={saveChanges} loading={loading} className="btn">
-              {loading ? 'Loading...' : 'Save Changes'}
-            </LoadingButton>
+          </Box>
+          <Box
+            sx={{
+              marginTop: 'auto',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <DeleteIcon className="btn" id="editIcon" onClick={deleteNote} />
+            <button onClick={saveChanges} className="btn gray">
+              Done
+            </button>
           </Box>
         </Box>
       </Fade>

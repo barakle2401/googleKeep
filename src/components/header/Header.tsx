@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import firebaseLogo from '@/assets/images/firebase-logo.png';
 import keepLogo from '@/assets/images/keep-logo.png';
 import reactLogo from '@/assets/images/react-logo.png';
-
+import { motion } from 'framer-motion';
 const Wrapper = styled.div`
   margin-top: 1rem;
   .logos {
@@ -27,6 +27,7 @@ const Wrapper = styled.div`
     }
     .firebase {
       margin: 0 8px;
+      width: 35px;
     }
   }
 `;
@@ -34,17 +35,46 @@ function Header() {
   return (
     <Wrapper>
       <div className="logos">
-        <span className="logo keep">
+        <motion.span
+          transition={{ delay: 0.6, duration: 2 }}
+          initial={{ x: '-100vw' }}
+          animate={{ x: 0 }}
+          className="logo keep"
+        >
           <img src={keepLogo} alt="Google Keep" />
-        </span>
-        <span className="plus">+</span>
-        <span className="logo react">
+        </motion.span>
+        <motion.span
+          transition={{ delay: 3, duration: 0.5 }}
+          initial={{ y: -100 }}
+          animate={{ y: 0 }}
+          className="plus"
+        >
+          +
+        </motion.span>
+        <motion.span
+          transition={{ delay: 0.7, duration: 2 }}
+          initial={{ x: '-100vw' }}
+          animate={{ x: 0 }}
+          className="logo react"
+        >
           <img src={reactLogo} alt="React" />
-        </span>
-        <span className="plus">+</span>
-        <span className="logo firebase">
+        </motion.span>
+        <motion.span
+          transition={{ delay: 3, duration: 0.5 }}
+          initial={{ y: -100 }}
+          animate={{ y: 0 }}
+          className="plus"
+        >
+          +
+        </motion.span>
+        <motion.span
+          transition={{ delay: 0.8, duration: 2 }}
+          initial={{ x: '-100vw' }}
+          animate={{ x: 0 }}
+          className="logo firebase"
+        >
           <img src={firebaseLogo} alt="Firebase" />
-        </span>
+        </motion.span>
       </div>
     </Wrapper>
   );

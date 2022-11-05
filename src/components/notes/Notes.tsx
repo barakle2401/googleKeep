@@ -6,13 +6,18 @@ import { useNotesStore } from '@/context/NotesContext';
 import db from '@/firebase/db';
 
 const Notes: React.FC = () => {
-  const notesStore = useNotesStore();
-  const [isNotesFetched, setIsNotesFetched] = useState<Boolean>(false);
+  const store = useNotesStore();
+  const [isNotesFetched, setIsNotesFetched] = useState(false);
 
-  const getNotes = async (): Promise<void> => {
-    const notes = await db.getNotes();
-    notesStore?.setNotes([...notes]);
-    setIsNotesFetched(true);
+  const getNotes = () => {
+    db.getNotes()
+      .then((notes) => {
+        store.setNotes([...notes]);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+      .finally(() => setIsNotesFetched(true));
   };
 
   useEffect(() => {
@@ -20,17 +25,19 @@ const Notes: React.FC = () => {
   }, []);
 
   const NotesList = observer(() => {
+    const notes = store.notes;
+    const noAvailableNotes = notes.length === 0;
+    if (!isNotesFetched) return <h3>Loading...</h3>;
+    else if (noAvailableNotes) return <h3>No data available</h3>;
     return (
       <div className="notes">
-        {notesStore?.notes.map((note) => {
+        {store.notes.map((note) => {
           return <Note text={note.text} id={note.id} title={note.title} key={note.id} />;
         })}
       </div>
     );
   });
 
-  if (!isNotesFetched) return <h3>Loading...</h3>;
-  else if (notesStore?.notes.length === 0) return <h1>No Data</h1>;
   return <NotesList />;
 };
 
