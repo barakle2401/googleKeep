@@ -1,1 +1,2 @@
-# Vite + React + Typescript + Eslint + Prettier
+# Vite + React + Typescript + Firebase + Mobx 
+
